@@ -1,4 +1,26 @@
 import streamlit as st
+import pandas as pd
 
-st.title("Transport Optimizer")
-st.write("Welcome to the Transport Optimization App!")
+st.title("Transport Optimizer (Excel Based)")
+
+# Upload file
+uploaded_file = st.file_uploader("Upload Excel File", type=["xlsx"])
+
+if uploaded_file:
+    try:
+        # Read Excel file using openpyxl engine
+        df = pd.read_excel(uploaded_file, engine='openpyxl', sheet_name=None)
+
+        st.success("File loaded successfully!")
+        sheet_names = list(df.keys())
+        st.write("Available sheets:", sheet_names)
+
+        # Display content of each sheet
+        for sheet, data in df.items():
+            st.subheader(f"Sheet: {sheet}")
+            st.dataframe(data)
+
+    except Exception as e:
+        st.error(f"Error loading file: {e}")
+else:
+    st.info("Please upload an Excel file to proceed.")
